@@ -3,14 +3,12 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: pod-demo
-  labels:
-    app: pod-demo
 spec:
   replicas: 2
   template:
     metadata:
-     labels:
-       app: myapp
+      labels:
+        app: myapp
     spec:
       containers:
       - name: myapp
@@ -22,7 +20,7 @@ kind: Service
 metadata:
   name: lb-myapp
   labels:
-    app: myapp
+    app: lb-myapp
 spec:
   type: NodePort
   ports:
