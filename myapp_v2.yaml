@@ -2,19 +2,20 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: nginx-deploy
+  name: myapp
   labels:
-    app: nginx
+    app: myapp
+  namespace: kube-test
 spec:
   replicas: 2
   template:
     metadata:
       labels:
-        app: nginx
+        app: myapp
     spec:
       containers:
-      - name: nginx
-        image: ikubernetes/myapp:v1
+      - name: myapp
+        image: ikubernetes/myapp:v2
         ports:
         - containerPort: 80
 
@@ -22,15 +23,15 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: nginx
+  name: myapp-server
   labels:
-    app: nginx
+    app: myapp-server
+  namespace: kube-test
 spec:
   type: NodePort
   ports:
   - port: 80
-    nodePort: 30001
     protocol: TCP
     targetPort: 80
   selector:
-    app: nginx
+    app: myapp
