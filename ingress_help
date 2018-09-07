@@ -1,0 +1,13 @@
+ingress提供http和https
+1. 创建ingress-controller(https://github.com/kubernetes/ingress-nginx/tree/master/deploy,克隆到本地)
+2. 裸机创建service-nodeport.yaml(wget https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/provider/baremetal/service-nodeport.yaml),需要添加一些nodePort,对外提供服务的端口
+3. 创建pods和service
+4. 创建ingress-*.yaml(示例)
+
+https的服务
+1. 自签名证书
+openssl genrsa -out tls.key 2048
+openssl req -new -x509 -key tls.key -out tls.crt -subj /C=CN/ST=BeiJing/L=Beijing/O=DevOps/CN=tomcat.zxl.com
+2. 创建secret
+kubectl create secret tls tomcat-ingress-secret --cert=tls.crt --key=tls.key
+3. 创建ingress-*.tls.yaml(示例)
