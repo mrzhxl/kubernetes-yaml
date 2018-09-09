@@ -1,0 +1,49 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-deploy-vol-nfs
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp-vol-nfs
+      release: canary
+  template:
+    metadata:
+      labels:
+        app: myapp-vol-nfs
+        release: canary
+    spec:
+      containers:
+      - name: myapp-vol-nfs
+        image: ikubernetes/myapp:v2
+        ports:
+        - name: http
+          containerPort: 80
+        # 挂载data-v1的磁盘
+        volumeMounts:
+        - name: data-v1
+          mountPath: /usr/share/nginx/html/
+      
+      # 创建data-v1的nfs磁盘
+      volumes:
+      - name: data-v1
+        nfs:
+          path: /data/volumes/v1
+          server: 192.168.226.100
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-vol-nfs-svc
+  namespace: default
+spec:
+  selector:
+    app: myapp-vol-nfs
+    release: canary
+  ports:
+  - name: http
+    port: 80

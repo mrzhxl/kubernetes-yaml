@@ -1,0 +1,70 @@
+---
+# 创建pods
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-deploy-pv-pvc
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp-pv-pvc
+      release: canary
+  template:
+    metadata:
+      labels:
+        app: myapp-pv-pvc
+        release: canary
+    spec:
+      containers:
+      - name: myapp-pv-pvc
+        image: ikubernetes/myapp:v2
+        ports:
+        - name: http
+          containerPort: 80
+        # 挂载volumes的html
+        volumeMounts:
+        - name: html
+          mountPath: /usr/share/nginx/html/
+
+      volumes:
+      - name: html
+        persistentVolumeClaim:
+          # 指定pvc的name
+          claimName: mypvc
+
+---
+# 创建pvc
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mypvc
+  namespace: default
+spec:
+  # 必须是pv的accessModes的子集
+  accessModes:
+  - ReadWriteMany
+  # 指定最小多大磁盘空间
+  resources:
+    requests:
+      storage: 1Gi
+  # 选择器,如果不写会自动分配符合磁盘空间的磁盘
+  selector:
+    matchLabels:
+      pv_name: pv-1    
+
+---
+#创建svc
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp-pv-pvc-svc
+  namespace: default
+spec:
+  selector:
+    app: myapp-pv-pvc
+    release: canary
+  ports:
+  - name: http
+    port: 80
