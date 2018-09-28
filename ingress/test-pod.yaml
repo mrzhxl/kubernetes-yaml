@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pod
+spec:
+  containers:
+  - name: test1
+    image: nginx
+    ports:
+    - name: http-80
+      containerPort: 80
+      
+  - name: test2
+    image: redis
+
