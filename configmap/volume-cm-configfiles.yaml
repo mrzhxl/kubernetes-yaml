@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: volume-configfiles
+data:
+  html: <h1>hello<h1>
+  

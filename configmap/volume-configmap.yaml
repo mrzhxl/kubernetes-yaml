@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: volume-configmap
+spec:
+  containers:
+  - name: volume-configmap
+    image: nginx
+    volumeMounts:
+    - name: html
+      mountPath: /usr/share/nginx/html/ # 挂载到容器的目录
+# 使用configmap名volume-configfiles，key是html
+  volumes:     
+  - name: html  # volumes名
+    configMap:
+      name: volume-configfiles  # confimap名字
+      items:
+      - key: html       # configmap里的key
+        path: test.html # 文件名挂载

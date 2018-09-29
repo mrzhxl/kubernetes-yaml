@@ -1,0 +1,18 @@
+# 创建ConfigMap
+
+# 使用命令创建（不指定key）
+kubectl create configmap cm_name --from-file=file_name #文件名是key，内容是value
+
+# 指定key
+kubectl create configmap cm_name --from-literal=loglevel=info --from-literal=appdatadir=/data
+
+# 从目录中进行创建
+kubectl create configmap cm_name --from-file=dir_name	# 文件名是key，文件内容是key的value
+
+
+
+
+
+# 2种pod使用方式
+1. 环境变量引用，如env-cm-configfiles.yaml创建configmap，env-configmap.yaml创建pod
+2. volume挂载，如volume-cm-configfiles.yaml创建configmap，volume-configmap.yaml创建pod
